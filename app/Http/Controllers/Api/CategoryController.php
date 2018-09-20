@@ -34,12 +34,13 @@ class CategoryController extends Controller
 
 
 
-    public function update(Request $request, $id)
-    {        
+    public function update(StoreUpdateCategoryFormRequest $request, $id)
+    {
         
-        if(!$category = $category = $this->category->find($id))
+        
+        if(!$category = $this->category->find($id))
         {
-            return response()->json(['error' => 'Not found'], 400);
+            return response()->json(['error' => 'Not found'], 404);
         }
 
         $category->update($request->all());
