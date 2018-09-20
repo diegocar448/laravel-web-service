@@ -58,4 +58,13 @@ class CategoryController extends Controller
 
         return response()->json([], 204);
     }
+
+    public function show($id)
+    {
+        if(!$category = $this->category->find($id))
+        {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        return response()->json($category);
+    }
 }
