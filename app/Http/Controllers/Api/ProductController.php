@@ -32,24 +32,21 @@ class ProductController extends Controller
         return response()->json($product, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
+
     public function show($id)
     {
-        //
+        if(!$product = $this->product->find($id))
+        {
+            return response()->json(['error' => 'Not Found'], 404);
+        }
+
+        return response()->json($product);
     }   
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
+
+
     public function update(StoreUpdateProductFormRequest $request, $id)
     {        
 
@@ -63,12 +60,8 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
+
     public function destroy($id)
     {
         if(!$product = $this->product->find($id))
