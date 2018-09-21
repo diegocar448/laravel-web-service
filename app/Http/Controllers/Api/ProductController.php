@@ -50,8 +50,16 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {        
+
+        if(!$product = $this->product->find($id))
+        {
+            return response()->json(['error' => 'Not Found'], 404);
+        }
+
+        $product->update($request->all());
+
+        return response()->json($product, 200);
     }
 
     /**
