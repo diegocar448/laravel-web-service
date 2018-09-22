@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Requests\StoreUpdateProductFormRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
 
-    protected $product, $totalPage = 10;
+    private $product, $totalPage = 10;
+    private $path = 'products';
+
 
     public function __construct(Product $product)
     {
@@ -40,7 +43,7 @@ class ProductController extends Controller
             $data['image'] = $nameFile;
 
             //iniciar o upload
-            $upload = $request->image->storeAs('products', $nameFile);
+            $upload = $request->image->storeAs($this->path, $nameFile);
 
 
             if(!$upload)
@@ -69,15 +72,50 @@ class ProductController extends Controller
     
 
 
-    public function update(StoreUpdateProductFormRequest $request, $id)
-    {        
+    public function update(Request $request, $id)
+    {
+
+        $data = $request->all();
+        //dd($request->all());
 
         if(!$product = $this->product->find($id))
         {
             return response()->json(['error' => 'Not Found'], 404);
         }
 
-        $product->update($request->all());
+
+
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            //dd("Fazendo upload");
+            if($product->image)
+            {
+                if(Storage::exists("{$this->path}/{$product->image}"))
+                {
+                    Storage::delete("{$this->path}/{$product->image}");
+                }
+            }
+
+
+            //A função  kebab_case faz o tratamento de caracteres especiais
+            $name = Kebab_case($request->name);
+            //pegar a extensão do arquivo
+            $extension = $request->image->extension();
+            //Pegar o nome do arquvo e concatena com a extensão
+            $nameFile = "{$name}.{$extension}";
+
+            $data['image'] = $nameFile;
+
+            //iniciar o upload
+            $upload = $request->image->storeAs($this->path, $nameFile);
+
+
+            if(!$upload)
+            {
+                return response()->json(['error' => 'Fail_Upload'], 500);
+            }
+        }
+
+        $product->update($data);
 
         return response()->json($product, 200);
     }
