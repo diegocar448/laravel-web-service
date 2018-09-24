@@ -37,6 +37,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        //'throttle:60,1' recurso de proteção quando houver 60 requisições em menos de 1 minutos 
+        //ele bloqueia o usuario temporariamente, anti DOS/DDOS
         'api' => [
             'throttle:60,1',
             'bindings',
