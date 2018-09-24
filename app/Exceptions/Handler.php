@@ -48,8 +48,12 @@ class Handler extends ExceptionHandler
     {
         //personalizar o erro
         //dd($exception);
-        if($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException )
-            return response()->json(['error' => 'Nao encontrou nada'], $exception->getStatusCode());
+        if($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ){
+            //se a requisição retornar em JSON(expectsJson) ou seja um ajax então
+            if($request->expectsJson())
+                return response()->json(['error' => 'Nao encontrou nada'], $exception->getStatusCode());
+        }
+
 
         return parent::render($request, $exception);
     }
