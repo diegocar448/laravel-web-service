@@ -21,4 +21,11 @@ class Category extends Model
             ->get();   
     }
 
+
+    //Muitos produtos tem muitas categoria
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
 }

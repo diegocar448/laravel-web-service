@@ -68,4 +68,10 @@ class Product extends Model
         dd($results); */
         
     }
+
+    //Uma categoria tem muitos produtos
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
