@@ -12,12 +12,18 @@ $this->delete('categories/{id}', 'Api\CategoryController@delete'); */
     'except' => ['edit', 'create']
 ]); */
 
-//Retornar todos os produtos de uma determinada categoria
-$this->get('categories/{id}/products', 'Api\CategoryController@products');
 
 
-$this->apiResource('categories', 'Api\CategoryController');
 
 
-$this->apiResource('products', 'Api\ProductController');
+$this->group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function(){
+    //Retornar todos os produtos de uma determinada categoria
+    $this->get('categories/{id}/products', 'CategoryController@products');
+
+    $this->apiResource('categories', 'CategoryController');
+
+    $this->apiResource('products', 'ProductController');
+});
+
+
 
