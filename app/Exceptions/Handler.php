@@ -54,6 +54,13 @@ class Handler extends ExceptionHandler
                 return response()->json(['error' => 'Nao encontrou nada'], $exception->getStatusCode());
         }
 
+        //tratar erro caso a rota receba um verbo http errado
+        if($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException ){
+            //se a requisição retornar em JSON(expectsJson) ou seja um ajax então
+            if($request->expectsJson())
+                return response()->json(['error' => 'Metodo nao permitido'], $exception->getStatusCode());
+        }
+
 
         return parent::render($request, $exception);
     }
